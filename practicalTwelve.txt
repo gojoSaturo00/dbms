@@ -1,0 +1,21 @@
+Chit 12 
+
+// Create the "student" collection and insert documents
+db.student.insertMany([
+    { stud_id: 1, stud_name: "Alice", dept: "Computer", marks: 70 },
+    { stud_id: 2, stud_name: "Bob", dept: "Civil", marks: 40 },
+    { stud_id: 3, stud_name: "Charlie", dept: "Computer", marks: 85 },
+    { stud_id: 4, stud_name: "David", dept: "Chemical", marks: 25 },
+    { stud_id: 5, stud_name: "Eve", dept: "Computer", marks: 60 },
+]);
+
+
+db.student.find({ marks: { $gt: 50 } });
+
+db.student.find({ marks: { $gte: 50, $lte: 80 } });
+
+db.student.find({ dept: "Computer", marks: { $gt: 60 } });
+
+db.student.updateMany({ dept: "Civil" }, { $set: { marks: 30 } });
+
+db.student.deleteMany({ dept: "Chemical", marks: { $lt: 30 } });

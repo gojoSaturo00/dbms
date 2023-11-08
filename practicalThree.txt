@@ -1,0 +1,33 @@
+-- Create the Dept table
+CREATE TABLE Deptt (
+    deptId INT PRIMARY KEY,
+    deptName VARCHAR(10) NOT NULL,
+    deptLoc VARCHAR(10) UNIQUE -- 4. Add Unique to deptLoc.
+);
+
+-- Create the Emp table with a foreign key constraint on empDeptId referencing deptId
+CREATE TABLE Empp (
+    empId INT PRIMARY KEY,
+    empName VARCHAR(10) NOT NULL,
+    empSal INT,
+    empDeptId INT,
+    FOREIGN KEY (empDeptId) REFERENCES Deptt(deptId)
+);
+
+-- 2. Add Not Null constraint to empName.
+-- ALTER TABLE Emp
+-- ALTER COLUMN empName VARCHAR(10) NOT NULL;
+
+-- 3. Insert few Record.
+-- Insert records into the Dept table
+INSERT INTO Deptt (deptId, deptName, deptLoc)
+VALUES (1, 'IT', 'NewYork'),
+       (2, 'HR', 'LosAngeles'),
+       (3, 'Finance', 'Chicago');
+
+-- Insert records into the Emp table
+INSERT INTO Empp (empId, empName, empSal, empDeptId)
+VALUES (101, 'John', 50000, 1),
+       (102, 'Alice', 45000, 1),
+       (103, 'Bob', 55000, 2);
+

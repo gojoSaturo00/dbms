@@ -1,0 +1,49 @@
+
+
+Use databasename 
+
+db.sales.insertMany([
+  { product: "A", quantity: 10, price: 5, date: ISODate("2023-01-15T08:00:00Z") },
+  { product: "B", quantity: 5, price: 10, date: ISODate("2023-01-16T08:00:00Z") },
+  { product: "A", quantity: 8, price: 7, date: ISODate("2023-01-17T08:00:00Z") },
+  { product: "C", quantity: 12, price: 4, date: ISODate("2023-01-18T08:00:00Z") },
+]);
+
+// indexing 
+
+ db.sales.createIndex({quantity: 1})
+
+db.sales.getIndexes()
+
+ db.sales.find().sort({quantity:1})   
+//ascending
+
+db.sales.find().sort({quantity:-1})
+//descending 
+
+
+// Aggregation
+db.product.insert({ctype:'p', item:'paste',  amount:40,  customer:'Mike'})
+db.product.insert({ctype:'o', item:'Guitar', amount:200, customer:'Tom'})
+db.product.insert({ctype:'p', item:'milk',   amount:60,  customer:'Mike'})
+db.product.insert({ctype:'p', item:'pizza',  amount:150, customer:'Kiran'})
+db.product.insert({ctype:'p', item:'paste',  amount:40,  customer:'Kiran'})
+db.product.insert({ctype:'o', item:'pizza',  amount:150, customer:'Devika'})
+db.product.insert({ctype:'p', item:'paste',  amount:40,  customer:'Mike'})
+
+// To find total amount of money spend by each customer
+db.product.aggregate([{$group: {_id:"$customer", total: {$sum: "$amount"}}}]
+
+
+//Find Total number of products Purchased by customer
+ db.product.aggregate([{$group: {_id:"$customer", total: {$sum:1}}}])
+
+
+//Maximum amount of product purchased by each customer
+ db.product.aggregate([{$group: {_id:"$customer", total: {$max:"$amount"}}}])
+
+//min
+ db.product.aggregate([{$group: {_id:"$customer", total: {$min:"$amount"}}}])
+
+//Amount earned by each product
+db.product.aggregate([{$group: {_id:"$item", total: {$sum:"$amount"}}}])

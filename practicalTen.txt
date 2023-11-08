@@ -1,0 +1,65 @@
+-- Create the Library table (if not already created)
+CREATE TABLE Library (
+    BookID INT PRIMARY KEY,
+    BookTitle VARCHAR(255),
+    Author VARCHAR(255),
+    PublishedYear INT
+);
+
+-- Insert some records into the Library table
+INSERT INTO Library (BookID, BookTitle, Author, PublishedYear)
+VALUES
+    (1, 'Book 1', 'Author A', 2000),
+    (2, 'Book 2', 'Author B', 2010),
+    (3, 'Book 3', 'Author C', 2020);
+
+
+-- Create the Library_Audit table (if not already created)
+CREATE TABLE Library_Audit (
+    AuditID INT AUTO_INCREMENT PRIMARY KEY,
+    ChangeType VARCHAR(10),  -- 'Update' or 'Delete'
+    BookID INT,
+    BookTitle VARCHAR(255),
+    Author VARCHAR(255),
+    PublishedYear INT,
+    ChangeTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create a BEFORE UPDATE trigger
+DELIMITER $$
+CREATE TRIGGER Library_Before_Update
+BEFORE UPDATE ON Library
+FOR EACH ROW
+BEGIN
+    IF OLD.BookTitle != NEW.BookTitle OR OLD.Author != NEW.Author OR OLD.PublishedYear != NEW.PublishedYear THEN
+        INSERT INTO Library_Audit (ChangeType, BookID, BookTitle, Author, PublishedYear)
+        VALUES ('Update', OLD.BookID, OLD.BookTitle, OLD.Author, OLD.PublishedYear);
+    END IF;
+END;
+$$
+DELIMITER ;
+
+-- Create a BEFORE DELETE trigger
+DELIMITER $$
+CREATE TRIGGER Library_Before_Delete
+BEFORE DELETE ON Library
+FOR EACH ROW
+BEGIN
+    INSERT INTO Library_Audit (ChangeType, BookID, BookTitle, Author, PublishedYear)
+    VALUES ('Delete', OLD.BookID, OLD.BookTitle, OLD.Author, OLD.PublishedYear);
+END;
+$$
+DELIMITER ;
+
+-- Update a record in the Library table
+UPDATE Library
+SET BookTitle = 'New Title'
+WHERE BookID = 2;
+
+-- Delete a record from the Library table
+DELETE FROM Library
+WHERE BookID = 3;
+
+SELECT * from Library;
+
+SELECT * from Library_Audit;

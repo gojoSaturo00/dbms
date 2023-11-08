@@ -1,0 +1,50 @@
+CREATE TABLE branch_masters (
+    branch_id INT PRIMARY KEY,
+    branch_name VARCHAR(255)
+);
+
+CREATE TABLE employee_master (
+    emp_id INT PRIMARY KEY,
+    first_name VARCHAR(255),
+    middle_name VARCHAR(255),
+    last_name VARCHAR(255),
+    department VARCHAR(255),
+    manager_id INT,
+    FOREIGN KEY (manager_id) REFERENCES employee_master(emp_id)
+);
+
+-- 1. Insert records in branch_master
+INSERT INTO branch_masters (branch_id, branch_name)
+VALUES
+    (1, 'Head Office'),
+    (2, 'Branch A'),
+    (3, 'Branch B'),
+    (4, 'Branch C'),
+    (5, 'Branch D');
+    
+-- 2. Insert records in employee_master.
+INSERT INTO employee_master (emp_id, first_name, middle_name, last_name, department, manager_id)
+VALUES
+    (1, 'John', 'Doe', 'Smith', 'HR', NULL),
+    (2, 'Jane', 'Mary', 'Johnson', 'IT', 1),
+    (3, 'Robert', 'James', 'Brown', 'Finance', 2),
+    (4, 'Mike', 'Nick', 'Johns', 'Finance', 2),
+    (5, 'Adam', 'Jack', 'Cena', 'IT', 1);
+
+-- 3. Create index on emp_name column of employee_master.
+CREATE INDEX idx_employee_name ON employee_master (first_name, middle_name, last_name);
+
+-- 4. Create a view containing employee details
+CREATE VIEW employee_details AS
+SELECT
+    emp_id,
+    CONCAT(first_name, ' ', middle_name, ' ', last_name) AS full_name,
+    department
+FROM employee_master;
+
+select * from branch_masters;
+
+select * from employee_master;
+
+select * from employee_details;
+

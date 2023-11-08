@@ -1,0 +1,68 @@
+Map reduction syntax 
+
+db.collection.mapReduce(
+	function() {emit(key, value);},
+// define map function 
+Function (key,values) {return reduceFunction, {
+//define reduce function 
+
+Out: collection 
+Query : document 
+Sort : document
+Limit : number
+}
+)
+
+
+
+db.bank.insertMany([
+    { cust_id: 1, cust_name: "John", branch: "A", balance: 5000 },
+    { cust_id: 2, cust_name: "Alice", branch: "B", balance: 7500 },
+    { cust_id: 3, cust_name: "Bob", branch: "A", balance: 6000 },
+    { cust_id: 4, cust_name: "Charlie", branch: "C", balance: 8000 },
+    { cust_id: 5, cust_name: "Eve", branch: "B", balance: 5500 }
+]);
+
+
+// MapReduce function to display the balance in each branch:
+var mapFunction = function () {
+    emit(this.branch, this.balance);
+};
+
+// Reduce function
+var reduceFunction = function (key, values) {
+    return Array.sum(values);
+};
+
+// Run the MapReduce operation
+var result = db.bank.mapReduce(mapFunction, reduceFunction, { out: "branch_balances" });
+
+// Query the result collection
+db.branch_balances.find();
+
+
+db.books.insertMany([
+    { book_id: 1, title: "Book1", author: "Author A", type: "Fiction" },
+    { book_id: 2, title: "Book2", author: "Author B", type: "Non-Fiction" },
+    { book_id: 3, title: "Book3", author: "Author C", type: "Fiction" },
+    { book_id: 4, title: "Book4", author: "Author D", type: "Mystery" },
+    { book_id: 5, title: "Book5", author: "Author E", type: "Non-Fiction" }
+]);
+
+
+
+// MapReduce function to display the number of books of each type
+var mapFunction = function () {
+    emit(this.type, 1);
+};
+
+// Reduce function
+var reduceFunction = function (key, values) {
+    return Array.sum(values);
+};
+
+// Run the MapReduce operation
+var result = db.books.mapReduce(mapFunction, reduceFunction, { out: "book_types" });
+
+// Query the result collection
+db.book_types.find();
